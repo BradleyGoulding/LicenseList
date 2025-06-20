@@ -18,6 +18,10 @@ let package = Package(
             name: "LicenseList",
             targets: ["LicenseList"]
         ),
+        .plugin(
+            name: "PrepareLicenseList",
+            targets: ["PrepareLicenseList"]
+        ),
     ],
     targets: [
         .executableTarget(
