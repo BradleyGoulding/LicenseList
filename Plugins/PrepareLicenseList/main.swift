@@ -59,7 +59,7 @@ struct PrepareLicenseList: BuildToolPlugin {
 }
 
 #if canImport(XcodeProjectPlugin)
-extension PrepareLicenseList {
+extension PrepareLicenseList: XcodeBuildToolPlugin {
     // This command works with Xcode projects.
     func createBuildCommands(context: XcodeProjectPlugin.XcodePluginContext, target: XcodeProjectPlugin.XcodeTarget) throws -> [PackagePlugin.Command] {
         [
