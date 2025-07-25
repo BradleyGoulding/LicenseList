@@ -1,5 +1,8 @@
 import Foundation
 import PackagePlugin
+#if canImport(XcodeProjectPlugin)
+import XcodeProjectPlugin
+#endif
 
 @main
 struct PrepareLicenseList: BuildToolPlugin {
@@ -52,4 +55,20 @@ struct PrepareLicenseList: BuildToolPlugin {
             )
         ]
     }
+    
 }
+
+#if canImport(XcodeProjectPlugin)
+extension PrepareLicenseList {
+    // This command works with Xcode projects.
+    func createBuildCommands(context: XcodeProjectPlugin.XcodePluginContext, target: XcodeProjectPlugin.XcodeTarget) throws -> [PackagePlugin.Command] {
+        [
+            makeBuildCommand(
+                executableURL: try context.tool(named: "spp").url,
+                sourcePackagesURL: try sourcePackages(context.pluginWorkDirectoryURL),
+                outputURL: context.pluginWorkDirectoryURL.appending(path: "LicenseList.swift")
+            )
+        ]
+    }
+}
+#endif
