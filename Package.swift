@@ -18,38 +18,20 @@ let package = Package(
             name: "LicenseList",
             targets: ["LicenseList"]
         ),
-        .plugin(
-            name: "PrepareLicenseList",
-            targets: ["PrepareLicenseList"]
-        ),
     ],
     targets: [
-        .executableTarget(
-            name: "spp",
-            path: "Sources/SourcePackagesParser",
-            swiftSettings: swiftSettings
-        ),
-        .plugin(
-            name: "PrepareLicenseList",
-            capability: .buildTool(),
-            dependencies: [.target(name: "spp")]
-        ),
-        .testTarget(
-            name: "SourcePackagesParserTests",
-            dependencies: [
-                .target(name: "spp", condition: .when(platforms: [.macOS]))
-            ],
-            resources: [
-                .copy("Resources/Broken"),
-                .copy("Resources/Empty"),
-                .copy("Resources/SourcePackages"),
-            ],
-            swiftSettings: swiftSettings
-        ),
         .target(
             name: "LicenseList",
-            swiftSettings: swiftSettings,
-            plugins: ["PrepareLicenseList"]
+            resources: [
+                .process("licenses.json")
+            ],
+            swiftSettings: swiftSettings
+        ),
+        .testTarget(
+            name: "LibraryTests",
+            dependencies: ["LicenseList"],
+            path: "Tests/SourcePackagesParserTests",
+            swiftSettings: swiftSettings
         )
     ]
 )

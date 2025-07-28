@@ -28,6 +28,16 @@ extension View {
 
     func navigationBarRepositoryAnchorLink(action: @escaping () -> Void) -> some View {
         toolbar {
+            #if os(macOS)
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    action()
+                } label: {
+                    Image(systemName: "link")
+                }
+                .accessibilityIdentifier("repository_anchor_link")
+            }
+            #else
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     action()
@@ -36,6 +46,7 @@ extension View {
                 }
                 .accessibilityIdentifier("repository_anchor_link")
             }
+            #endif
         }
     }
 }

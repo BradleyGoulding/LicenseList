@@ -64,7 +64,11 @@ public struct PlainLicenseViewStyle: LicenseViewStyle {
                 .padding()
         }
         .clipShape(Rectangle())
+        #if os(macOS)
+        .navigationTitle(configuration.library.name)
+        #else
         .navigationBarTitle(configuration.library.name)
+        #endif
     }
 }
 
@@ -90,7 +94,7 @@ public struct WithRepositoryAnchorLinkLicenseViewStyle: LicenseViewStyle {
         PlainLicenseViewStyle()
             .makeBody(configuration: configuration)
             .navigationBarRepositoryAnchorLink {
-                if let url = configuration.library.url {
+                if let url = configuration.library.repositoryURL {
                     configuration.openURL(url)
                 }
             }

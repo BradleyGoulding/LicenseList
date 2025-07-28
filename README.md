@@ -5,6 +5,8 @@
 
 Generate a list of licenses for the Swift Package libraries that your app depends on.
 
+> **Fork Notice**: This fork adds Xcode Cloud compatibility by replacing the build plugin with a standalone license generation script. The original plugin-based approach only worked with Swift Package Manager projects.
+
 [![Github forks](https://img.shields.io/github/forks/cybozu/LicenseList)](https://github.com/cybozu/LicenseList/network/members)
 [![Github stars](https://img.shields.io/github/stars/cybozu/LicenseList)](https://github.com/cybozu/LicenseList/stargazers)
 [![Github issues](https://img.shields.io/github/issues/cybozu/LicenseList)](https://github.com/cybozu/LicenseList/issues)
@@ -46,6 +48,23 @@ LicenseList is available through [Swift Package Manager](https://github.com/appl
    <img src="https://github.com/user-attachments/assets/4b27f2a4-2193-41d3-ba27-8be8c4293983" width="800px">
 3. Add package and link `LicenseList` to your application target.  
    <img src="https://github.com/user-attachments/assets/bcf23bcb-ece9-413b-8304-7d52148486ac" width="600px">
+
+**License Generation Setup**
+
+To generate license data for your dependencies:
+
+1. In Xcode, select your app target and go to **Build Phases**
+2. Click **+** → **New Run Script Phase**
+3. Add this single line to the script:
+   ```bash
+   swift Packages/LicenseList/generate-licenses.swift
+   ```
+4. Add the generated `licenses.json` file to your target as a resource
+
+The script will automatically:
+- Find your `SourcePackages` directory
+- Generate `licenses.json` in your project root  
+- Handle projects with no dependencies gracefully
 
 **CLI**
 
@@ -112,6 +131,23 @@ struct ContentView: View {
     }
 }
 ```
+
+## Architecture
+
+This fork uses a different architecture than the original:
+
+**Original (Plugin-based)**:
+- Build plugin automatically runs during compilation
+- Generates Swift enum with embedded license data
+- Only works with Swift Package Manager projects
+- Incompatible with Xcode Cloud
+
+**This Fork (Script-based)**:
+- Standalone `generate-licenses.swift` script
+- Generates JSON file with license data
+- Library reads JSON at runtime
+- Works with any build system (Xcode, Xcode Cloud, CI/CD)
+- Separates license generation from rendering
 
 ## Contributing to LicenseList
 
